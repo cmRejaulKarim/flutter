@@ -50,13 +50,16 @@ class _ColorChangerState extends State<ColorChanger> {
       child: Scaffold(
         backgroundColor: _bgColor,
         body: Center(
-          child: Text(
-            "Tap anywhere to change color!",
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Colors.black.withValues(),
-              // color: Colors.black.withOpacity(0.7),
+          child: Padding(
+            padding: const EdgeInsets.all(5), // 5px margin
+            child: Text(
+              "Tap anywhere to change color!",
+              textAlign: TextAlign.center, // Center-align the text
+              style: const TextStyle(
+                fontSize: 40,
+                fontWeight: FontWeight.bold,
+                color: Colors.black, // You can also use withOpacity if needed
+              ),
             ),
           ),
         ),
