@@ -55,7 +55,8 @@ class _ColorChangerState extends State<ColorChanger> {
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(),
+              // color: Colors.black.withOpacity(0.7),
             ),
           ),
         ),
