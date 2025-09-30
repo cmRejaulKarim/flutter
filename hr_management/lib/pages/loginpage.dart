@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:hr_management/pages/registrationpage.dart';
 
 class LoginPage extends StatelessWidget{
 
@@ -68,6 +69,21 @@ class LoginPage extends StatelessWidget{
                   backgroundColor: Colors.purple,
                   foregroundColor: Colors.grey
               ),
+            ),
+
+
+            SizedBox(height: 20.0),
+            TextButton(onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Registration()),
+              );
+            }, child: Text('Registration',
+              style: TextStyle(
+                color: Colors.purple,
+                decoration: TextDecoration.underline,
+              ),
+            )
             )
 
           ],

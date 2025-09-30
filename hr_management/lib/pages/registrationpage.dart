@@ -1,5 +1,9 @@
 import 'package:date_field/date_field.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hr_management/pages/loginpage.dart';
+import 'package:radio_group_v2/radio_group_v2.dart';
+import 'package:radio_group_v2/radio_group_v2.dart' as v2;
 
 class Registration extends StatefulWidget {
   const Registration({super.key});
@@ -20,6 +24,8 @@ class _RegistrationState extends State<Registration> {
   // final TextEditingController name = TextEditingController();
   // final TextEditingController name = TextEditingController();
   // final TextEditingController name = TextEditingController();
+
+  final RadioGroupController genderController = RadioGroupController();
 
   final DateTimeFieldPickerPlatform dob = DateTimeFieldPickerPlatform.material;
 
@@ -113,7 +119,68 @@ class _RegistrationState extends State<Registration> {
                   decoration: const InputDecoration(labelText: 'Date of Birth'),
                   mode: DateTimeFieldPickerMode.date,
                   pickerPlatform: dob,
+
+                  onChanged: (DateTime? value) {
+                    setState(() {
+                      selectedDOB = value;
+                    });
+                  },
                 ),
+
+                SizedBox(height: 20.0),
+
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Gender',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      v2.RadioGroup(
+                          controller: genderController,
+                        values : ['Male', 'Female', 'Other'],
+                      indexOfDefault: 0,
+                        orientation: RadioGroupOrientation.horizontal,
+                        onChanged: (newValue) {
+                            selectedGender = newValue.toString();
+                        }),
+                    ],
+                  ),
+                ),
+
+                SizedBox(height: 20.0),
+
+                ElevatedButton(
+                    onPressed: (){
+                     // register()
+                    },
+                    child: Text("Registration",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontFamily: GoogleFonts.lato().fontFamily,
+                      ),
+                    ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                    foregroundColor: Colors.grey
+                  ),
+                ),
+                SizedBox(height: 20.0),
+                TextButton(onPressed: (){
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                }, child: Text('Login',
+                style: TextStyle(
+                  color: Colors.purple,
+                  decoration: TextDecoration.underline,
+                ),
+                )
+                )
+
               ],
             ),
           ),
