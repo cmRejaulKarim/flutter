@@ -1,7 +1,11 @@
+import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
+
 import 'package:date_field/date_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_management/pages/loginpage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 import 'package:radio_group_v2/radio_group_v2.dart' as v2;
 
@@ -31,8 +35,12 @@ class _RegistrationState extends State<Registration> {
 
   String? selectedGender;
   DateTime? selectedDOB;
+  XFile? selectedImage;
 
-  final _formKey = GlobalKey<FormState>();
+  Uint8List? webImage;
+  final ImagePicker _picker = ImagePicker();
+
+   final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -139,48 +147,82 @@ class _RegistrationState extends State<Registration> {
                         style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                       v2.RadioGroup(
-                          controller: genderController,
-                        values : ['Male', 'Female', 'Other'],
-                      indexOfDefault: 0,
+                        controller: genderController,
+                        values: ['Male', 'Female', 'Other'],
+                        indexOfDefault: 0,
                         orientation: RadioGroupOrientation.horizontal,
                         onChanged: (newValue) {
-                            selectedGender = newValue.toString();
-                        }),
+                          selectedGender = newValue.toString();
+                        },
+                      ),
                     ],
                   ),
                 ),
+                SizedBox(height: 20.0),
+
+                TextButton.icon(
+                  icon: Icon(Icons.image),
+                    label: Text('Upload Image'),
+                    onPressed: (){
+
+                    ///////////
+                    },
+                ),
+                if(kIsWeb && webImage != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                  child: Image.memory(
+                      webImage!
+                    ,height: 100,
+                    width: 100,
+                    fit: BoxFit.cover,
+                    ),
+                  )
+                else if(selectedImage != null)
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Image.file(
+                      File(selectedImage!.path),
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
+                    ),
+
 
                 SizedBox(height: 20.0),
 
                 ElevatedButton(
-                    onPressed: (){
-                     // register()
-                    },
-                    child: Text("Registration",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontFamily: GoogleFonts.lato().fontFamily,
-                      ),
+                  onPressed: () {
+                    // register()
+                  },
+                  child: Text(
+                    "Registration",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontFamily: GoogleFonts.lato().fontFamily,
                     ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple,
-                    foregroundColor: Colors.grey
+                    foregroundColor: Colors.grey,
                   ),
                 ),
                 SizedBox(height: 20.0),
-                TextButton(onPressed: (){
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
-                  );
-                }, child: Text('Login',
-                style: TextStyle(
-                  color: Colors.purple,
-                  decoration: TextDecoration.underline,
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginPage()),
+                    );
+                  },
+                  child: Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Colors.purple,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
-                )
-                )
-
               ],
             ),
           ),
