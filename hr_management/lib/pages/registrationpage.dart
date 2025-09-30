@@ -1,4 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
+import 'dart:io';
 
 import 'package:date_field/date_field.dart';
 import 'package:flutter/foundation.dart';
@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_management/pages/loginpage.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 import 'package:radio_group_v2/radio_group_v2.dart' as v2;
 
@@ -40,7 +41,7 @@ class _RegistrationState extends State<Registration> {
   Uint8List? webImage;
   final ImagePicker _picker = ImagePicker();
 
-   final _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -162,23 +163,20 @@ class _RegistrationState extends State<Registration> {
 
                 TextButton.icon(
                   icon: Icon(Icons.image),
-                    label: Text('Upload Image'),
-                    onPressed: (){
-
-                    ///////////
-                    },
+                  label: Text('Upload Image'),
+                  onPressed: pickImage,
                 ),
-                if(kIsWeb && webImage != null)
+                if (kIsWeb && webImage != null)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                  child: Image.memory(
-                      webImage!
-                    ,height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
+                    child: Image.memory(
+                      webImage!,
+                      height: 100,
+                      width: 100,
+                      fit: BoxFit.cover,
                     ),
                   )
-                else if(selectedImage != null)
+                else if (kIsWeb && selectedImage != null)
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.file(
@@ -187,7 +185,7 @@ class _RegistrationState extends State<Registration> {
                       width: 100,
                       fit: BoxFit.cover,
                     ),
-
+                  ),
 
                 SizedBox(height: 20.0),
 
@@ -229,5 +227,25 @@ class _RegistrationState extends State<Registration> {
         ),
       ),
     );
+  }
+
+  Future<void> pickImage() async {
+    if (kIsWeb) {
+      var pickedImage = await ImagePickerWeb.getImageAsBytes();
+      if (pickedImage != null) {
+        setState(() {
+          webImage = pickedImage;
+        });
+      }
+    } else {
+      final XFile? pickedImage = await _picker.pickImage(
+        source: ImageSource.gallery,
+      );
+      if (pickedImage != null) {
+        setState(() {
+          selectedImage = pickedImage;
+        });
+      }
+    }
   }
 }
