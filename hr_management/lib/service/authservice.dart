@@ -7,14 +7,14 @@ class AuthService {
   final String baseUrl = "http://localhost:8085";
 
   Future<bool> login(String email, String password) async {
-    final url = Uri.parse('$baseUrl/auth/login');
+    final url = Uri.parse('$baseUrl/api/auth/login');
     final headers = {'Content-Type': 'application/json'};
 
     final body = jsonEncode({'email': email, 'password': password});
 
     final response = await http.post(url, headers: headers, body: body);
 
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       final data = jsonDecode(response.body);
       String token = data['token'];
 
@@ -35,11 +35,10 @@ class AuthService {
 
   Future<String?> getUserRole() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    print(prefs);
     print(prefs.getString('userRole'));
     return prefs.getString('userRole');
   }
-
-
 
 
 }
