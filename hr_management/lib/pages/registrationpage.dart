@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_management/pages/loginpage.dart';
 import 'package:hr_management/service/authservice.dart';
+import 'package:hr_management/utils/image_picker_service.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
+// import 'package:image_picker_web/image_picker_web.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 import 'package:radio_group_v2/radio_group_v2.dart' as v2;
 
@@ -28,11 +29,6 @@ class _RegistrationState extends State<Registration> {
   final TextEditingController confirmPassword = TextEditingController();
   final TextEditingController cell = TextEditingController();
   final TextEditingController address = TextEditingController();
-
-  // final TextEditingController name = TextEditingController();
-  // final TextEditingController name = TextEditingController();
-  // final TextEditingController name = TextEditingController();
-  // final TextEditingController name = TextEditingController();
 
   final RadioGroupController genderController = RadioGroupController();
 
@@ -233,25 +229,45 @@ class _RegistrationState extends State<Registration> {
     );
   }
 
+  // Future<void> pickImage() async {
+  //   if (kIsWeb) {
+  //     var pickedImage = await ImagePickerWeb.getImageAsBytes();
+  //     if (pickedImage != null) {
+  //       setState(() {
+  //         webImage = pickedImage;
+  //       });
+  //     }
+  //   } else {
+  //     final XFile? pickedImage = await _picker.pickImage(
+  //       source: ImageSource.gallery,
+  //     );
+  //     if (pickedImage != null) {
+  //       setState(() {
+  //         selectedImage = pickedImage;
+  //       });
+  //     }
+  //   }
+  // }
   Future<void> pickImage() async {
+    final picker = ImagePickerService();
+
     if (kIsWeb) {
-      var pickedImage = await ImagePickerWeb.getImageAsBytes();
-      if (pickedImage != null) {
+      final imageBytes = await picker.pickImageBytes();
+      if (imageBytes != null) {
         setState(() {
-          webImage = pickedImage;
+          webImage = imageBytes;
         });
       }
     } else {
-      final XFile? pickedImage = await _picker.pickImage(
-        source: ImageSource.gallery,
-      );
-      if (pickedImage != null) {
+      final file = await picker.pickImageFile();
+      if (file != null) {
         setState(() {
-          selectedImage = pickedImage;
+          selectedImage = XFile(file.path);
         });
       }
     }
   }
+
 
   void _register() async {
     //validation for form

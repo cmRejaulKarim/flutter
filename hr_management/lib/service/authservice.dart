@@ -97,11 +97,6 @@ class AuthService {
       return false;
     }
   }
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.remove('authToken');
-    await prefs.remove('userRole');
-  }
 
   Future<bool> hasRole(List<String> roles) async {
     String? userRole = await getUserRole();
@@ -122,6 +117,38 @@ class AuthService {
   }
 
 
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('authToken');
 
+    if (token == null) {
+      // Already logged out or token not found
+      return;
+    }
+
+    final url = Uri.parse('$baseUrl/api/auth/logout'); // Replace with your actual URL
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print('Logout successful');
+      } else {
+        print('Logout failed: ${response.body}');
+      }
+    } catch (e) {
+      print('Logout error: $e');
+    }
+
+    // Clear token and user role from local storage regardless of API response
+    await prefs.remove('authToken');
+    await prefs.remove('userRole');
+  }
 
 }

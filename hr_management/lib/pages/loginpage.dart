@@ -6,6 +6,7 @@ import 'package:hr_management/pages/adminpage.dart';
 import 'package:hr_management/pages/dept_head_dash.dart';
 import 'package:hr_management/pages/registrationpage.dart';
 import 'package:hr_management/service/authservice.dart';
+import 'package:hr_management/service/employee_service.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController email = TextEditingController();
@@ -13,6 +14,8 @@ class LoginPage extends StatelessWidget {
 
   final storage = new FlutterSecureStorage();
   AuthService authService = AuthService();
+  EmployeeService employeeService = EmployeeService();
+
 
   @override
   Widget build(BuildContext context) {
