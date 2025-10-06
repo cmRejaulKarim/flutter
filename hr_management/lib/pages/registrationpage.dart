@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hr_management/pages/loginpage.dart';
+import 'package:hr_management/service/authservice.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
@@ -18,6 +19,9 @@ class Registration extends StatefulWidget {
 }
 
 class _RegistrationState extends State<Registration> {
+  bool _obsecurePassword = true;
+  bool _obsecureConfirmPassword = true;
+
   final TextEditingController name = TextEditingController();
   final TextEditingController email = TextEditingController();
   final TextEditingController password = TextEditingController();
@@ -37,8 +41,8 @@ class _RegistrationState extends State<Registration> {
   String? selectedGender;
   DateTime? selectedDOB;
   XFile? selectedImage;
-
   Uint8List? webImage;
+
   final ImagePicker _picker = ImagePicker();
 
   final _formKey = GlobalKey<FormState>();
@@ -246,6 +250,83 @@ class _RegistrationState extends State<Registration> {
           selectedImage = pickedImage;
         });
       }
+    }
+  }
+
+  void _register() async {
+    //validation for form
+    if (_formKey.currentState!.validate()) {
+      if (password.text != confirmPassword.text) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Password does not match')));
+        return;
+      }
+
+      //validation for image
+      if (kIsWeb) {
+        if (webImage == null) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Please select an image')));
+          return;
+        }
+      } else {
+        if (selectedImage == null) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Please select an image')));
+          return;
+        }
+      }
+
+      final user = {
+        "name": name.text,
+        "email": email.text,
+        "password": password.text,
+        "phone": cell.text,
+      };
+      final employee = {
+        "name": name.text,
+        "email": email.text,
+        "phone": cell.text,
+        "gender": selectedGender,
+        "address": address.text,
+        "dateOfBirth": selectedDOB?.toIso8601String() ?? "",
+      };
+      final apiService = AuthService();
+
+      bool success = false;
+      if(kIsWeb && webImage != null){
+        success = await apiService.registerEmployee(
+          user: user,
+          employee: employee,
+          photoBytes: webImage,
+        );
+      }
+      else if(selectedImage != null){
+        success = await apiService.registerEmployee(
+          user: user,
+          employee: employee,
+          photofile: File(selectedImage!.path),
+        );
+      }
+
+      if (success) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Registration successful')));
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+      } else {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Registration failed')));
+      }
+
+
     }
   }
 }

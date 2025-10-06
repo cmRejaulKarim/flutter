@@ -111,10 +111,15 @@ class LoginPage extends StatelessWidget {
           MaterialPageRoute(builder: (context) => DeptHeadDash()),
         );
       } else if (role == 'EMPLOYEE') {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => EmployeeProfile()),
-        );
+        final profile = await employeeService.getEmployeeProfile();
+
+        if(profile != null) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => EmployeeProfile(profile: profile)),
+          );
+        }
       } else {
         print('Invalid role');
       }
