@@ -39,12 +39,12 @@ class AuthService {
   Future<bool> registerEmployee({
     required Map<String, dynamic> user,
     required Map<String, dynamic> employee,
-    File? photofile,
+    File? photoFile,
     Uint8List? photoBytes,
   }) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('$baseUrl/api/auth/register'),
+      Uri.parse('$baseUrl/api/employee/'),
     );
 
     request.fields['user'] = jsonEncode(user);
@@ -58,14 +58,14 @@ class AuthService {
           filename: 'photo.jpg',
         ),
       );
-    } else if (photofile != null) {
+    } else if (photoFile != null) {
       request.files.add(
-        await http.MultipartFile.fromPath('photo', photofile.path),
+        await http.MultipartFile.fromPath('photo', photoFile.path),
       );
     }
 
     var response = await request.send();
-    return response.statusCode == 200;
+    return response.statusCode == 200 || response.statusCode == 201;
   }
 
   Future<String?> getUserRole() async {
