@@ -1,68 +1,68 @@
-class employee {
-  int? id;
-  String? name;
-  String? email;
-  String? phone;
-  String? gender;
-  String? address;
-  String? dateOfBirth;
-  String? photo;
-  String? joiningDate;
-  int? department;
-  int? designation;
-  int? basicSalary;
-  int? allowance;
-  bool? active;
+import 'department.dart';
+import 'designation.dart';
 
-  employee(
-      {this.id,
-        this.name,
-        this.email,
-        this.phone,
-        this.gender,
-        this.address,
-        this.dateOfBirth,
-        this.photo,
-        this.joiningDate,
-        this.department,
-        this.designation,
-        this.basicSalary,
-        this.allowance,
-        this.active});
+class Employee {
+  final int id;
+  final String name;
+  final String email;
+  final String? photo;         // optional
+  final String? address;
+  final String? gender;
+  final String? dateOfBirth;   // or DateTime
+  final int? departmentId;
+  final int? designationId;
+  final String? joiningDate;
+  final String? phone;
+  final double? basicSalary;
 
-  employee.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    name = json['name'];
-    email = json['email'];
-    phone = json['phone'];
-    gender = json['gender'];
-    address = json['address'];
-    dateOfBirth = json['dateOfBirth'];
-    photo = json['photo'];
-    joiningDate = json['joiningDate'];
-    department = json['department'];
-    designation = json['designation'];
-    basicSalary = json['basicSalary'];
-    allowance = json['allowance'];
-    active = json['active'];
+  Employee({
+    required this.id,
+    required this.name,
+    required this.email,
+    this.photo,
+    this.address,
+    this.gender,
+    this.dateOfBirth,
+    this.departmentId,
+    this.designationId,
+    this.joiningDate,
+    this.phone,
+    this.basicSalary,
+  });
+
+  factory Employee.fromJson(Map<String, dynamic> json) {
+    return Employee(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      photo: json['photo'],
+      address: json['address'],
+      gender: json['gender'],
+      dateOfBirth: json['dateOfBirth'],
+      departmentId: json['department'],
+      designationId: json['designation'],
+      joiningDate: json['joiningDate'],
+      phone: json['phone'],
+      basicSalary: (json['basicSalary'] != null)
+          ? (json['basicSalary'] as num).toDouble()
+          : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['email'] = this.email;
-    data['phone'] = this.phone;
-    data['gender'] = this.gender;
-    data['address'] = this.address;
-    data['dateOfBirth'] = this.dateOfBirth;
-    data['photo'] = this.photo;
-    data['joiningDate'] = this.joiningDate;
-    data['department'] = this.department;
-    data['designation'] = this.designation;
-    data['basicSalary'] = this.basicSalary;
-    data['allowance'] = this.allowance;
-    data['active'] = this.active;
-    return data;
+    return {
+      'id': id,
+      'name': name,
+      'email': email,
+      if (photo != null) 'photo': photo,
+      if (address != null) 'address': address,
+      if (gender != null) 'gender': gender,
+      if (dateOfBirth != null) 'dateOfBirth': dateOfBirth,
+      if (departmentId != null) 'department': departmentId,
+      if (designationId != null) 'designation': designationId,
+      if (joiningDate != null) 'joiningDate': joiningDate,
+      if (phone != null) 'phone': phone,
+      if (basicSalary != null) 'basicSalary': basicSalary,
+    };
   }
 }

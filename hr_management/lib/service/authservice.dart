@@ -44,7 +44,7 @@ class AuthService {
   }) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('$baseUrl/api/employee/'),
+      Uri.parse('$baseUrl/api/employee'),
     );
 
     request.fields['user'] = jsonEncode(user);

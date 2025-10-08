@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hr_management/employee/employee_profile.dart';
 import 'package:hr_management/pages/accountant_dash.dart';
 import 'package:hr_management/pages/adminpage.dart';
+import 'package:hr_management/pages/department_page.dart';
 import 'package:hr_management/pages/dept_head_dash.dart';
 import 'package:hr_management/pages/registrationpage.dart';
 import 'package:hr_management/service/authservice.dart';
@@ -77,6 +78,21 @@ class LoginPage extends StatelessWidget {
               },
               child: Text(
                 'Registration',
+                style: TextStyle(
+                  color: Colors.purple,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),SizedBox(height: 20.0),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => DepartmentPage()),
+                );
+              },
+              child: Text(
+                'Departments',
                 style: TextStyle(
                   color: Colors.purple,
                   decoration: TextDecoration.underline,
