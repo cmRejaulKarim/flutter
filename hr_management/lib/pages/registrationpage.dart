@@ -4,8 +4,12 @@ import 'package:date_field/date_field.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hr_management/entity/department.dart';
+import 'package:hr_management/entity/designation.dart';
 import 'package:hr_management/pages/loginpage.dart';
 import 'package:hr_management/service/authservice.dart';
+import 'package:hr_management/service/department_service.dart';
+import 'package:hr_management/service/designation_service.dart';
 import 'package:hr_management/utils/image_picker_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
@@ -26,6 +30,14 @@ class Registration extends StatefulWidget {
 class _RegistrationState extends State<Registration> {
   bool _obsecurePassword = true;
   bool _obsecureConfirmPassword = true;
+  final DepartmentService _departmentService = DepartmentService();
+  final DesignationService _designationService = DesignationService();
+
+  List<Department> departments = [];
+  List<Designation> designations = [];
+
+  Department? selectedDepartment;
+  Designation? selectedDesignation;
 
   final TextEditingController name = TextEditingController();
   final TextEditingController email = TextEditingController();
@@ -46,6 +58,22 @@ class _RegistrationState extends State<Registration> {
   final ImagePicker _picker = ImagePicker();
 
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDepartments();
+  }
+  Future<void> _loadDepartments() async {
+    departments = await _departmentService.getDepartments();
+    print(departments.toString());
+    setState(() {});
+  }
+  Future<void> _loadDesignations(int departmentId) async {
+    designations = await _designationService.getDesignations(departmentId);
+    print(designations.toString());
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +191,41 @@ class _RegistrationState extends State<Registration> {
                     ],
                   ),
                 ),
+
+                SizedBox(height: 20.0),
+
+                DropdownButtonFormField<Department>(
+                value: selectedDepartment,
+                  decoration: const InputDecoration(
+                  labelText: 'Department',
+                  ),
+                  items: departments.map((dept) {
+                    return DropdownMenuItem(value: dept, child: Text(dept.name));
+                  }).toList(),
+                  onChanged: (value) {
+                  setState(() => selectedDepartment = value);
+                  if (value != null) _loadDesignations(value.id);
+                  }
+                ),
+
+                SizedBox(height: 20.0),
+
+                DropdownButtonFormField<Designation>(
+                  value: selectedDesignation,
+                  decoration: const InputDecoration(
+                    labelText: 'Designation',
+                  ),
+                  items: designations.map((designation) {
+                    return DropdownMenuItem(
+                      value: designation,
+                      child: Text(designation.name),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() => selectedDesignation = value);
+                  },
+                ),
+
                 SizedBox(height: 20.0),
 
                 TextButton.icon(
@@ -362,6 +425,14 @@ class _RegistrationState extends State<Registration> {
         ).showSnackBar(SnackBar(content: Text('Password does not match')));
         return; // stop further execution
       }
+      // ✅ Validate that a department is selected
+      if (selectedDepartment == null ||
+      selectedDesignation == null) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Department or Designation cannot be empty.')));
+        return; // stop further execution
+      }
 
       // ✅ Validate that the user has selected an image
       if (kIsWeb) {
@@ -402,6 +473,8 @@ class _RegistrationState extends State<Registration> {
             ? DateFormat('yyyy-MM-dd').format(selectedDOB!)
             : "",
         // convert DateTime to ISO string
+        "departmentId": selectedDepartment!.id,
+        "designationId": selectedDesignation!.id,
       };
 
       // ✅ Initialize your API Service

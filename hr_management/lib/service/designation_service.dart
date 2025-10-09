@@ -3,10 +3,10 @@ import 'package:hr_management/entity/designation.dart';
 import 'package:http/http.dart' as http;
 
 class DesignationService {
-  final String baseUrl = "http://localhost:8085";
+  final String baseUrl = "http://localhost:8085/api";
 
   Future<List<Designation>?> getAllDesignations() async {
-    final url = Uri.parse('$baseUrl/api/designation');
+    final url = Uri.parse('$baseUrl/designation');
 
     try {
       final response = await http.get(
@@ -29,4 +29,14 @@ class DesignationService {
       return null;
     }
   }
+
+  Future<List<Designation>> getDesignations(int departmentId) async {
+    final response = await http.get(Uri.parse('$baseUrl/designation/by-department/$departmentId'));
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      return data.map((json) => Designation.fromJson(json)).toList();
+    }
+    throw Exception('Failed to load designations');
+  }
+
 }

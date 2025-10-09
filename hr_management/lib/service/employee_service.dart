@@ -1,12 +1,10 @@
-
-
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:hr_management/service/authservice.dart';
 
 class EmployeeService{
 
-  final String baseUrl = "http://localhost:8085";
+  final String baseUrl = "http://localhost:8085/api";
 
   Future<Map<String, dynamic>?> getEmployeeProfile() async {
     String? token = await AuthService().getToken();
@@ -17,7 +15,7 @@ class EmployeeService{
 
     }
 
-    final url = Uri.parse('$baseUrl/api/employee/profile');
+    final url = Uri.parse('$baseUrl/employee/profile');
 
     final response = await http.get(
       url,

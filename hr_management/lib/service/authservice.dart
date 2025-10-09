@@ -6,10 +6,10 @@ import 'package:jwt_decode/jwt_decode.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-  final String baseUrl = "http://localhost:8085";
+  final String baseUrl = "http://localhost:8085/api";
 
   Future<bool> login(String email, String password) async {
-    final url = Uri.parse('$baseUrl/api/auth/login');
+    final url = Uri.parse('$baseUrl/auth/login');
     final headers = {'Content-Type': 'application/json'};
 
     final body = jsonEncode({'email': email, 'password': password});
@@ -44,7 +44,7 @@ class AuthService {
   }) async {
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('$baseUrl/api/employee'),
+      Uri.parse('$baseUrl/employee'),
     );
 
     request.fields['user'] = jsonEncode(user);
@@ -126,7 +126,7 @@ class AuthService {
       return;
     }
 
-    final url = Uri.parse('$baseUrl/api/auth/logout'); // Replace with your actual URL
+    final url = Uri.parse('$baseUrl/auth/logout'); // Replace with your actual URL
 
     try {
       final response = await http.post(

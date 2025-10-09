@@ -13,8 +13,6 @@ class DepartmentPage extends StatelessWidget {
       home: DepartmentScreen(),
     );
   }
-
-
 }
 
 class DepartmentScreen extends StatefulWidget {
@@ -25,7 +23,6 @@ class DepartmentScreen extends StatefulWidget {
 }
 
 class _DepartmentScreenState extends State<DepartmentScreen> {
-
   List<Department>? departments;
   bool isLoading = true;
 
@@ -48,24 +45,16 @@ class _DepartmentScreenState extends State<DepartmentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Departments'),
-        ),
-        body: isLoading
-            ? Center(child: Text('No Departments Found'))
-            : ListView.builder(
-          itemCount: departments?.length,
-          itemBuilder: (context, index) {
-            final department = departments![index];
-            return Card(
-              child: ListTile(
-                title: Text(department.name),
-                subtitle: Text(
-                    'Designation: ${department.designations?.map((e) => e.name).join(', ')}',
-                ),
-              ),
-            );
-          },)
-        );
-    }
+      appBar: AppBar(title: Text('Departments')),
+      body: isLoading
+          ? Center(child: Text('No Departments Found'))
+          : ListView.builder(
+              itemCount: departments?.length,
+              itemBuilder: (context, index) {
+                final department = departments![index];
+                return Card(child: ListTile(title: Text(department.name)));
+              },
+            ),
+    );
+  }
 }
